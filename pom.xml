@@ -24,6 +24,7 @@
             <version>6.9.10</version>
             <scope>test</scope>
         </dependency>
+       </dependencies>
                 
     <build>
         <plugins>
