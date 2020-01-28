@@ -1,4 +1,4 @@
-# BookingComSearchTest
+# RozetkaAddToCartTest
 <br>Add to cart functionality test with using Page Object pattern. </br>
 Performed for the website: https://rozetka.com.ua/
 ## Prerequisites
