@@ -23,6 +23,7 @@ public class AddToCartTest {
     private static final String MODAL_TITLE = "Корзина";
     private static final String EMPTY_CART_TEXT = "Корзина пуста";
 
+    // Setting up Page, webDriver and webDriverWait instances
     private Page page;
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
