@@ -6,16 +6,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import java.util.List;
-
 
 public class AddToCartTest {
 
     // Specifying the test data
+    private static final String BASE_PAGE_TITLE = "Интернет-магазин ROZETKA™";
     private static final String USER_NAME = "Automation Tester";
     private static final String USER_EMAIL = "automation.qa.404@gmail.com";
     private static final String USER_PASS = "Strongpass123";
@@ -28,7 +28,6 @@ public class AddToCartTest {
     private WebDriver webDriver;
     private WebDriverWait webDriverWait;
 
-
     @BeforeClass
     public void setUp(){
         page = new Page();
@@ -37,13 +36,18 @@ public class AddToCartTest {
         System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
         System.setProperty("webdriver.ie.driver", "./drivers/IEDriverServer.exe");
 
-//        webDriver = new FirefoxDriver();
-        webDriver = new ChromeDriver();
+        webDriver = new FirefoxDriver();
+//        webDriver = new ChromeDriver();
         webDriverWait = new WebDriverWait(webDriver, 20);
 
         // Getting to the base page
         // Takes the URL and webDriver instance as the arguments
         page.getTheBasePage("https://rozetka.com.ua/", webDriver);
+
+        // Checking if the actual page title is similar to the expected
+        String actualBasePageTitle = webDriver.getTitle();
+        Assert.assertTrue(actualBasePageTitle.contains(BASE_PAGE_TITLE));
+
     }
 
     @Test(priority = 1)
@@ -55,9 +59,10 @@ public class AddToCartTest {
         WebElement webElement = webDriverWait.until
                 (ExpectedConditions.visibilityOfElementLocated(By.linkText("Automation Tester")));
 
-        // Validation if the link text is equal to the user name, which means the user is logged in
+        // Verifying if the link text is equal to the user name, which means the user is logged in
         String actual = webElement.getText();
         assertEquals(actual, USER_NAME);
+
     }
 
     @Test(priority = 2)
@@ -65,11 +70,11 @@ public class AddToCartTest {
         // Searching for the good "Кроссовки Reebok"
         page.searchTheItem(SEARCH_QUERY, webDriver);
 
-        // Validation if there's a text "Кроссовки Reebok" within the list of found goods specified by its class name
+        // Verifying if there's a text "Кроссовки Reebok" within the list of found goods specified by its class name
         List<WebElement> list = webDriver.findElements(page.GOODS_LIST);
         for (WebElement el: list){
-            String actual = el.getText();
-            assertTrue(actual.contains(SEARCH_QUERY));
+        String actual = el.getText();
+        assertTrue(actual.contains(SEARCH_QUERY));
         }
     }
 
@@ -79,13 +84,13 @@ public class AddToCartTest {
         // Method takes webDriverWait instance as an argument
         page.addToCart(webDriverWait);
 
-        // Validation if there's a text "Корзина" equal to the expected cart title
+        // Verifying if there's a text "Корзина" equal to the expected cart title
         WebElement webElement = webDriverWait.until
                 (ExpectedConditions.visibilityOfElementLocated(page.CART_LOCATOR));
         String actualModalTitle = webElement.findElement(page.CART_TITLE_ELEMENT).getText();
         assertEquals(actualModalTitle, MODAL_TITLE);
 
-        // Validation if a text equals to the search query is present at the good's link text,
+        // Verifying if a text equals to the search query is present at the good's link text,
         // specifying that there's a proper good inside a cart
         String actualModalContent = webElement.findElement(page.CART_CONTENT_ELEMENT).getText();
         assertTrue(actualModalContent.contains(SEARCH_QUERY));
@@ -96,7 +101,7 @@ public class AddToCartTest {
         // Removal of an item from the cart
         page.removeFromCart(webDriverWait);
 
-        // Validation if there's a text "Корзина пуста" equals to the expected empty cart text
+        // Verifying if there's a text "Корзина пуста" equals to the expected empty cart text
         WebElement webElement = webDriverWait.until
                 (ExpectedConditions.presenceOfElementLocated(page.CART_DUMMY_ELEMENT));
         String actual = webElement.getText();
